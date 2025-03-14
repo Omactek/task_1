@@ -29,7 +29,7 @@ class Algorithms:
                 if xm > 0:
                     # if m is in the right half-plane; increase number of k 
                     k = k + 1
-        return k%2
+        return k%2  #inside - returns 1, outside - returns 0
     
     def winding_number(self, q: QPointF, pol:QPolygonF):
         """
