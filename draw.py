@@ -9,8 +9,8 @@ class Draw(QWidget):
         super().__init__(*args, **kwargs)
         self.__q = QPointF(0.0, 0.0)
         self.__pol = QPolygonF()
-        self.__add_vertex = False
-        
+        self.__polygons = []
+        self.__add_vertex = False 
 
     def mousePressEvent(self, e:QMouseEvent):
         
@@ -50,16 +50,22 @@ class Draw(QWidget):
         #Draw polygon
         qp.drawPolygon(self.__pol)
         
+        #Draw polygons
+        for pol in self.__polygons:
+              qp.drawPolygon(pol)
+        
         #Set graphic attributes, point
         qp.setPen(Qt.GlobalColor.black)
         qp.setBrush(Qt.GlobalColor.red)
-        
         #draw point
         r = 10
         qp.drawEllipse(int(self.__q.x()-r), int(self.__q.y()-r), 2*r, 2*r)
         
         #End drawing
         qp.end()
+        
+    def paintInputEvent(self, polygons):
+        self.__polygons = polygons
         
     def switchInput(self):
         #Input point or polygon vertex

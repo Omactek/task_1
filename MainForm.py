@@ -9,6 +9,7 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
 from draw import Draw
 from algorithms import *
+from read_shp import *
 
 class Ui_MainForm(object):
     def setupUi(self, MainForm):
@@ -180,7 +181,11 @@ class Ui_MainForm(object):
         )
         if file_path:
             print(f"Selected file: {file_path}")
+        polygons = load_shapefile(file_path)
         
+        ui.Canvas.paintInputEvent(polygons)
+            
+                
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
