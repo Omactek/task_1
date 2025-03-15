@@ -10,7 +10,8 @@ class Draw(QWidget):
         self.__q = QPointF(0.0, 0.0)
         self.__pol = QPolygonF()
         self.__polygons = []
-        self.__add_vertex = False 
+        self.__add_vertex = False
+        self.highlighted_pol = None
 
     def mousePressEvent(self, e:QMouseEvent):
         
@@ -31,8 +32,6 @@ class Draw(QWidget):
         else:
             self.__q.setX(x)
             self.__q.setY(y)
-        
-        #Repaint screen
         self.repaint()
  
  
@@ -44,12 +43,15 @@ class Draw(QWidget):
         qp.setPen(Qt.GlobalColor.black)
         qp.setBrush(Qt.GlobalColor.yellow)
         
-        #Draw polygon
-        qp.drawPolygon(self.__pol)
-        
         #Draw polygons
         for pol in self.__polygons:
-              qp.drawPolygon(pol)
+            if pol == self.highlighted_pol:
+                qp.setBrush(QColor(0, 255, 0, 128))
+            else:
+                qp.setBrush(Qt.GlobalColor.yellow)
+        
+            qp.setPen(Qt.GlobalColor.black)
+            qp.drawPolygon(pol)
         
         #Set graphic attributes, point
         qp.setPen(Qt.GlobalColor.black)
@@ -73,3 +75,10 @@ class Draw(QWidget):
     def getPol(self):
         #Get polygon
         return self.__pol
+    
+    def getPolygons(self):
+        return self.__polygons
+    
+    def highlightPolygon(self, pol):
+        self.highlighted_pol = pol
+        self.repaint()

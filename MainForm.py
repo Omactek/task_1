@@ -113,7 +113,7 @@ class Ui_MainForm(object):
         self.actionOpen_File_Dialog.triggered.connect(self.openFileDialog)
                 
         #Connect components and slots
-        self.actionRay_crossing.triggered.connect(self.analyzeClick)
+        self.actionRay_crossing.triggered.connect(self.analyzeRay)
         self.actionPoint_Polygon.triggered.connect(self.switchClick)
 
         self.retranslateUi(MainForm)
@@ -140,34 +140,30 @@ class Ui_MainForm(object):
         self.actionRay_crossing.setText(_translate("MainForm", "Ray crossing"))
         self.actionRay_crossing.setToolTip(_translate("MainForm", "Ray crossing algorithm"))
 
-    def analyzeClick(self):
-        #Analyze point and polygon position
+    def analyzeRay(self):
+        #Analyze point and polygon position using Ray algorithm
         
         #Get input data
         q = ui.Canvas.getQ()
-        pol = ui.Canvas.getPol()
-        
-        #Analyze position
-        a = Algorithms()
-        result = a.ray_crossing(q, pol)
-        
-        #Static method
-        #result = Algorithms.ray_crossing(q, pol)
-        
-        #Show results
-        dialog = QtWidgets.QMessageBox()
-        dialog.setWindowTitle('Result of analysis')
-        
-        #Point q inside pol
-        if result == 1:
-            dialog.setText('Inside')
-        
-        #Point q outside pol
-        else:
-            dialog.setText('Outside')
+        polygons = ui.Canvas.getPolygons()
+        pol_inside = False
+        for pol in polygons:
+            #Analyze position
+            a = Algorithms()
+            result = a.ray_crossing(q, pol)
             
-        #Show dialog
-        dialog.exec()
+            #Static method
+            #result = Algorithms.ray_crossing(q, pol)
+            
+            #Show results
+            
+            #Point q inside pol
+            if result == True:
+                pol_inside = True
+                self.pointInside(pol)
+                
+        if pol_inside == False:
+            self.pointOutside()
   
         
     def switchClick(self):
@@ -188,8 +184,30 @@ class Ui_MainForm(object):
         polygons = load_shapefile(file_path, width, height)
         
         ui.Canvas.paintInputEvent(polygons)
-            
-                
+        
+    @staticmethod
+    def pointInside(pol):
+        """
+        Opens dialog box with a message that point is inside a polygon and highlight the polygon
+        """
+        dialog = QtWidgets.QMessageBox()
+        dialog.setWindowTitle('Result of analysis')
+        ui.Canvas.highlightPolygon(pol)
+        dialog.setText('Bod zdá se býti umístěn na Pepově zahradě')
+        dialog.exec()
+        return
+
+    @staticmethod
+    def pointOutside():
+        """
+        Opens dialog box with a message that point is not inside a polygon."
+        """
+        dialog = QtWidgets.QMessageBox()
+        dialog.setWindowTitle('Result of analysis')
+        dialog.setText('Bohužel, bod se nachází mimo Pepovu zahradu :(')
+        dialog.exec()
+        return
+    
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
