@@ -1,7 +1,8 @@
 from PyQt6.QtCore import *
 from PyQt6.QtGui import *
 from PyQt6.QtWidgets import *
-from itertools import combinations 
+
+from math import sqrt, acos, pi
 
 class Algorithms:
     def __init__(self):
@@ -31,12 +32,12 @@ class Algorithms:
                     k = k + 1
         return True if k%2 == 1 else False
     
-    def winding_number(self, q: QPointF, pol:QPolygonF):
+    def winding_number(self, q: QPointF, polygon: QPolygonF):
         """
         #  init cumulative angle measure to 0 (Ω)
         # set tolerance value (small number - allow point approximation)
 
-        # loop over all triplets of points (pi, q, pi+1)
+        # loop over subsequent pairs points (pi, pi+1...)
         # for each consecutive pair of points (pi, pi+1) in a polygon, and a point q we want to test:
 
             # determine the position of q
@@ -56,9 +57,32 @@ class Algorithms:
         cum_angle_meas = 0
         tolerance = 0.01
 
-        triplets = list(combinations(QPolygonF, 2), q)
+        for i in range(len(polygon)):
+            point1 = polygon[i]
+            point2 = polygon[(i + 1) % len(polygon)]  # to acces the first point as the last one
 
-        for trip in triplets:
-            
-            pass
-        pass
+            vector1 = [point1.x() - q.x(), point1.y() - q.y()]
+            vector2 = [point2.x() - q.x(), point2.y() - q.y()]
+
+            # A * B = ∥A∥∥B∥cos(θ) ==> cos(θ) = (A * B) / (∥A∥∥B∥)
+
+            dot_product = vector1[0] * vector2[0] + vector1[1] * vector2[1]
+
+            # normalize vectors
+            norm1 = sqrt(vector1[0]**2 + vector1[1]**2)
+            norm2 = sqrt(vector2[0]**2 + vector2[1]**2)
+            angle = acos(round(dot_product / (norm1 * norm2), 10)) # get rid of small inaccuracies caused by floaters
+
+            cross_product = (point2.x() - point1.x()) * (q.y() - point1.y()) - (point2.y() - point1.y()) * (q.x() - point1.x())
+        
+
+            if cross_product > 0: # point on the left side
+                cum_angle_meas += angle
+            elif cross_product <= 0:
+                cum_angle_meas -= angle
+            # else: if the cross_product is zero it should be on line?
+
+        if abs(cum_angle_meas - 2 * pi) < tolerance:
+            return True
+
+        return False
