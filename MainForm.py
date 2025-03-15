@@ -181,7 +181,11 @@ class Ui_MainForm(object):
         )
         if file_path:
             print(f"Selected file: {file_path}")
-        polygons = load_shapefile(file_path)
+
+        width = ui.Canvas.width()
+        height = ui.Canvas.height()
+
+        polygons = load_shapefile(file_path, width, height)
         
         ui.Canvas.paintInputEvent(polygons)
             
