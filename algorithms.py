@@ -86,3 +86,49 @@ class Algorithms:
             return True
 
         return False
+    
+    def minmaxbox(self, pol: QPolygonF):
+        mmb = QPolygonF()
+
+        #findVertices
+        x_min = min(pol, key = lambda k: k.x()).x()
+        x_max = max(pol, key = lambda k: k.x()).x()
+
+        y_min = min(pol, key = lambda k: k.y()).y()
+        y_max = max(pol, key = lambda k: k.y()).y()
+
+        v0 = QPointF(x_min, y_min)
+        v1 = QPointF(x_max, y_min)
+        v2 = QPointF(x_max, y_max)
+        v3 = QPointF(x_min, y_max)
+
+        mmb.append(v0)
+        mmb.append(v1)
+        mmb.append(v2)
+        mmb.append(v3)
+        
+        return mmb
+    
+    def point_inside_minmaxbox(self, q: QPointF, mmb: QPolygonF):
+        """
+        #  Tests if a point is inside minmaxbox polygon using its min and max coordinates
+        #  Returns True (inside) or False (outside)
+        """
+        if q.x() >= mmb[0].x() and q.x() <= mmb[2].x() and q.y() >= mmb[0].y() and q.y() <= mmb[2].y():
+            return True
+        else:
+            return False
+        
+    def select_suspicious_polygons(self, q: QPointF, list_of_polygons):
+        """
+        #  Tests if a point is inside minmaxbox of each polygon from given list of polygons using its min and max coordinates
+        #  Returns list of polygons whose minmax boxes have the point inside
+        """
+        suspicious_polygons = []
+        #searching for potential polygons (testing if the point is inside the minmax box of each polygon)
+        for pol in list_of_polygons:
+            mmb = self.minmaxbox(pol)
+            sus = self.point_inside_minmaxbox(q,mmb)
+            if sus:
+                suspicious_polygons.append(pol) #adds suspicious polygon to the list of suspicious polygons
+        return suspicious_polygons

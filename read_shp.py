@@ -33,7 +33,7 @@ def load_shapefile(data_path, width, height):
         
         q_polygon = QPolygonF()
         
-        #iterate throught bounding points of a polygon, saving them in QPolygonF, 
+        #iterate through bounding points of a polygon, saving them in QPolygonF, 
         # rescaling the coordinates to make the polygons visible in the canvas
         for x,y in polygon.exterior.coords:
             x = (x - min_x) * scaled_factor

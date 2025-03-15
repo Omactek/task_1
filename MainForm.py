@@ -49,6 +49,7 @@ class Ui_MainForm(object):
         icon.addPixmap(QtGui.QPixmap("icons/open_file.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         self.actionOpen.setIcon(icon)
         self.actionOpen.setObjectName("actionOpen")
+        self.actionOpen.triggered.connect(self.openFileDialog)
         self.actionExit = QtGui.QAction(parent=MainForm)
         icon1 = QtGui.QIcon()
         icon1.addPixmap(QtGui.QPixmap("icons/exit.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
@@ -104,7 +105,7 @@ class Ui_MainForm(object):
         self.toolBar.addSeparator()
         self.toolBar.addAction(self.actionExit)
 
-        # file dialog
+        # file dialog (needed?? - added under the file icon above)
         self.actionOpen_File_Dialog = QtGui.QAction(parent=MainForm)
         self.actionOpen_File_Dialog.setText("Open File Dialog")
         self.actionOpen_File_Dialog.setToolTip("Open a file from disk")
@@ -143,21 +144,22 @@ class Ui_MainForm(object):
 
     def analyzeRay(self):
         #Analyze point and polygon position using Ray algorithm
-        
         #Get input data
         q = ui.Canvas.getQ()
         polygons = ui.Canvas.getPolygons()
+        
+        a = Algorithms()
+        suspicious_polygons = a.select_suspicious_polygons(q, polygons) #Selects polygons whose min-max box contains point q
+        
         pol_inside = False
-        for pol in polygons:
+        for pol in suspicious_polygons: #Only testing polygons whose min-max box contains point q
             #Analyze position
-            a = Algorithms()
             result = a.ray_crossing(q, pol)
             
             #Static method
             #result = Algorithms.ray_crossing(q, pol)
             
             #Show results
-            
             #Point q inside pol
             if result == True:
                 pol_inside = True
@@ -169,9 +171,12 @@ class Ui_MainForm(object):
     def analyzeWinding(self):
         q = ui.Canvas.getQ()
         polygons = ui.Canvas.getPolygons()
+        
+        a = Algorithms()
+        suspicious_polygons = a.select_suspicious_polygons(q, polygons) #Selects polygons whose min-max box contains point q
+        
         pol_inside = False
-        for pol in polygons:
-            a = Algorithms()
+        for pol in suspicious_polygons: #Only testing polygons whose min-max box contains point q
             result = a.winding_number(q, pol)
             if result == True:
                 pol_inside = True
