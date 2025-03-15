@@ -39,9 +39,6 @@ class Draw(QWidget):
     def paintEvent(self, e: QPaintEvent):
         #Create new graphic object
         qp = QPainter(self)
-        
-        #Start draw
-        qp.begin(self)
       
         #Set graphic attributes, polygon
         qp.setPen(Qt.GlobalColor.black)
@@ -61,8 +58,6 @@ class Draw(QWidget):
         r = 10
         qp.drawEllipse(int(self.__q.x()-r), int(self.__q.y()-r), 2*r, 2*r)
         
-        #End drawing
-        qp.end()
         
     def paintInputEvent(self, polygons):
         self.__polygons = polygons
