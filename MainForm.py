@@ -146,8 +146,9 @@ class Ui_MainForm(object):
         suspicious_polygons = a.select_suspicious_polygons(q, polygons) #Selects polygons whose min-max box contains point q
         
         pol_inside = False
+        pol_vertex = False
         pol_edge = False
-        pols_edge = []
+        higlist_list = []
         for pol in suspicious_polygons: #Only testing polygons whose min-max box contains point q
             #Analyze position
             result = a.ray_crossing(q, pol)
@@ -157,8 +158,12 @@ class Ui_MainForm(object):
             
             #Show results
             #Point q inside pol
-            if result == "edge":
-                pols_edge.append(pol)
+            if result == "vertex":
+                higlist_list.append(pol)
+                pol_inside = True
+                pol_vertex = True
+            elif result == "edge":
+                higlist_list.append(pol)
                 pol_inside = True
                 pol_edge = True
             elif result == "inside":
@@ -166,11 +171,13 @@ class Ui_MainForm(object):
                 self.pointInside(pol)
                 return
                 
-        if pol_edge:
-            self.pointEdge(pols_edge)
+        if pol_vertex:
+            self.pointVertex(higlist_list)
+        elif pol_edge:
+            self.pointEdge(higlist_list)
         elif pol_inside == False:
             self.pointOutside()
-            return
+        return
   
     def analyzeWinding(self):
         q = ui.Canvas.getQ()
@@ -180,12 +187,17 @@ class Ui_MainForm(object):
         suspicious_polygons = a.select_suspicious_polygons(q, polygons) #Selects polygons whose min-max box contains point q
         
         pol_inside = False
+        pol_vertex = False
         pol_edge = False
-        pols_edge = []
+        higlist_list = []
         for pol in suspicious_polygons: #Only testing polygons whose min-max box contains point q
             result = a.winding_number(q, pol)
-            if result == "edge":
-                pols_edge.append(pol)
+            if result == "vertex":
+                higlist_list.append(pol)
+                pol_inside = True
+                pol_vertex = True
+            elif result == "edge":
+                higlist_list.append(pol)
                 pol_inside = True
                 pol_edge = True
             elif result == "inside":
@@ -193,11 +205,13 @@ class Ui_MainForm(object):
                 self.pointInside(pol)
                 return
             
-        if pol_edge:
-            self.pointEdge(pols_edge)
+        if pol_vertex:
+            self.pointVertex(higlist_list)
+        elif pol_edge:
+            self.pointEdge(higlist_list)
         elif pol_inside == False:
             self.pointOutside()
-            return
+        return
         
     def switchClick(self):
         #Switch source, point or polygon
@@ -255,6 +269,18 @@ class Ui_MainForm(object):
         dialog.setWindowTitle('Result of analysis')
         ui.Canvas.highlightPolygon(pols)
         dialog.setText('Bod se nachází na hraně. Otázkou je, který z polygonů je Pepovou zahradou...')
+        dialog.exec()
+        return
+    
+    @staticmethod
+    def pointVertex(pols):
+        """
+        Opens dialog box with a message that point is identical to vertex/vertices of polygon."
+        """
+        dialog = QtWidgets.QMessageBox()
+        dialog.setWindowTitle('Result of analysis')
+        ui.Canvas.highlightPolygon(pols)
+        dialog.setText('Bod se nachází na vrcholu jedné nebo více Pepových zahrad')
         dialog.exec()
         return
     

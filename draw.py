@@ -36,6 +36,10 @@ class Draw(QWidget):
             test edge point on edge on on_edge_test data
             self.__q.setX(324.3333333333333)
             self.__q.setY(810.8333333333333)
+
+            vertex test
+            self.__q.setX(324.3333333333333)
+            self.__q.setY(648.6666666666666)
             """
         self.repaint()
  

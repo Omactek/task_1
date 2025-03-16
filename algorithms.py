@@ -10,6 +10,8 @@ class Algorithms:
     
     def ray_crossing(self, q: QPointF, pol: QPolygonF):
         # analyze point and polygon position using ray crossing algorithm
+        if self.point_vertex(q, pol):
+            return "vertex"
         k = 0 #amount of intersection points
         n = len(pol)
         for i in range(n): #process all points
@@ -44,6 +46,8 @@ class Algorithms:
     def winding_number(self, q: QPointF, polygon: QPolygonF):
         # analyze point and polygon position using winding number algorithm
         # returns "inside" / "outside" / "edge"
+        if self.point_vertex(q, polygon):
+            return "vertex"
         cum_angle_meas = 0
         tolerance = 0.01
         n = len(polygon)
@@ -120,3 +124,12 @@ class Algorithms:
             if sus:
                 suspicious_polygons.append(pol) #adds suspicious polygon to the list of suspicious polygons
         return suspicious_polygons
+    
+    def point_vertex(self, q: QPointF, polygon: QPointF):
+        """
+        Anallyze whether the input point is identical to one of polygons vertices
+        """
+        for point in polygon:
+            if q.x() == point.x() and q.y() == point.y():
+                return True
+        return False
