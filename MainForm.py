@@ -155,7 +155,10 @@ class Ui_MainForm(object):
             
             #Show results
             #Point q inside pol
-            if result == True:
+            if result == "edge":
+                pol_inside = True
+                self.pointEdge(pol)
+            elif result == "inside":
                 pol_inside = True
                 self.pointInside(pol)
                 

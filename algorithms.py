@@ -26,11 +26,14 @@ class Algorithms:
             if (yi1r > 0) and (yir <= 0) or (yi1r <= 0) and (yir > 0):
                 # We found a suitable segment, now we compute intersection
                 xm = (xi1r*yir - xir*yi1r)/(yi1r-yir)
-                
-                if xm > 0:
+                if xm == 0:
+                    self.inside_bounding(q, pol[i], pol[(i+1)%n])
+                    print("Bod je na hrane")
+                    return "edge"
+                elif xm > 0:
                     # if m is in the right half-plane; increase number of k 
                     k = k + 1
-        return True if k%2 == 1 else False
+        return "inside" if k%2 == 1 else "outside"
     
     def inside_bounding(self, q: QPointF, point1: QPointF, point2: QPointF):
         # analyze whether point is inside bounding box of an edge
