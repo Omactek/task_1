@@ -32,6 +32,14 @@ class Algorithms:
                     k = k + 1
         return True if k%2 == 1 else False
     
+    def inside_bounding(self, q: QPointF, point1: QPointF, point2: QPointF):
+        # analyze whether point is inside bounding box of an edge
+        bounding_x = [min(point1.x(), point2.x()), max(point1.x(), point2.x())]
+        bounding_y = [min(point1.y(), point2.y()), max(point1.y(), point2.y())]
+        x_statement = bounding_x[0] <= q.x() <= bounding_x[1]
+        y_statement = bounding_y[0] <= q.y() <= bounding_y[1]
+        return x_statement and y_statement
+    
     def winding_number(self, q: QPointF, polygon: QPolygonF):
         # analyze point and polygon position using winding number algorithm
         cum_angle_meas = 0
@@ -54,15 +62,16 @@ class Algorithms:
             norm2 = sqrt(vector2[0]**2 + vector2[1]**2)
             angle = acos(round(dot_product / (norm1 * norm2), 10)) # get rid of small inaccuracies caused by floaters (acos requires numbers from range -1 to 1)
 
+            if angle == 0 and self.inside_bounding(q, point1, point2): # if the angle is 0 - point is collinear to the edge
+                print("point is on the edge")
+                return True
+            
             cross_product = (point2.x() - point1.x()) * (q.y() - point1.y()) - (point2.y() - point1.y()) * (q.x() - point1.x()) # 2d cross product
         
-
             if cross_product > 0: # point on the left side
                 cum_angle_meas += angle
-            elif cross_product < 0: # point on the right side
+            else: # point on the right side or collinear (but then angle is 0)
                 cum_angle_meas -= angle
-            else: # cross product is 0 ==> the point is collinear
-                pass
 
         if abs(cum_angle_meas - 2 * pi) < tolerance:
             return True
