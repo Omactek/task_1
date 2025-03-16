@@ -32,6 +32,11 @@ class Draw(QWidget):
         else:
             self.__q.setX(x)
             self.__q.setY(y)
+            """
+            test edge point on edge on on_edge_test data
+            self.__q.setX(243.25)
+            self.__q.setY(486.5)
+            """
         self.repaint()
  
  
@@ -82,6 +87,10 @@ class Draw(QWidget):
     def highlightPolygon(self, pol):
         self.highlighted_pol = pol
         self.repaint()
+
+    def unHighlightPolygon(self):
+        self.highlighted_pol = False
+        self.repaint
 
     def clearData(self):
         self.__q = QPointF(0.0, 0.0)

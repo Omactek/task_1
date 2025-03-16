@@ -226,6 +226,7 @@ class Ui_MainForm(object):
         """
         dialog = QtWidgets.QMessageBox()
         dialog.setWindowTitle('Result of analysis')
+        ui.Canvas.unHighlightPolygon()
         dialog.setText('Bohužel, bod se nachází mimo Pepovu zahradu :(')
         dialog.exec()
         return
