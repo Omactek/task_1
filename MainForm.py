@@ -146,6 +146,8 @@ class Ui_MainForm(object):
         suspicious_polygons = a.select_suspicious_polygons(q, polygons) #Selects polygons whose min-max box contains point q
         
         pol_inside = False
+        pol_edge = False
+        pols_edge = []
         for pol in suspicious_polygons: #Only testing polygons whose min-max box contains point q
             #Analyze position
             result = a.ray_crossing(q, pol)
@@ -156,14 +158,19 @@ class Ui_MainForm(object):
             #Show results
             #Point q inside pol
             if result == "edge":
+                pols_edge.append(pol)
                 pol_inside = True
-                self.pointEdge(pol)
+                pol_edge = True
             elif result == "inside":
                 pol_inside = True
                 self.pointInside(pol)
+                return
                 
-        if pol_inside == False:
+        if pol_edge:
+            self.pointEdge(pols_edge)
+        elif pol_inside == False:
             self.pointOutside()
+            return
   
     def analyzeWinding(self):
         q = ui.Canvas.getQ()
@@ -173,17 +180,24 @@ class Ui_MainForm(object):
         suspicious_polygons = a.select_suspicious_polygons(q, polygons) #Selects polygons whose min-max box contains point q
         
         pol_inside = False
+        pol_edge = False
+        pols_edge = []
         for pol in suspicious_polygons: #Only testing polygons whose min-max box contains point q
             result = a.winding_number(q, pol)
             if result == "edge":
+                pols_edge.append(pol)
                 pol_inside = True
-                self.pointEdge(pol)
+                pol_edge = True
             elif result == "inside":
                 pol_inside = True
                 self.pointInside(pol)
-                
-        if pol_inside == False:
+                return
+            
+        if pol_edge:
+            self.pointEdge(pols_edge)
+        elif pol_inside == False:
             self.pointOutside()
+            return
         
     def switchClick(self):
         #Switch source, point or polygon
@@ -194,8 +208,6 @@ class Ui_MainForm(object):
         file_path, _ = file_dialog.getOpenFileName(
             None, "Open File", "", "Shapefiles (*.shp)"
         )
-        if file_path:
-            print(f"Selected file: {file_path}")
 
         width = ui.Canvas.width()
         height = ui.Canvas.height()
@@ -235,14 +247,14 @@ class Ui_MainForm(object):
         return
     
     @staticmethod
-    def pointEdge(pol):
+    def pointEdge(pols):
         """
         Opens dialog box with a message that point is on the edge of a polygon."
         """
         dialog = QtWidgets.QMessageBox()
         dialog.setWindowTitle('Result of analysis')
-        ui.Canvas.highlightPolygon(pol)
-        dialog.setText('Bod se nachází na hranici zahrad')
+        ui.Canvas.highlightPolygon(pols)
+        dialog.setText('Bod se nachází na hraně. Otázkou je, který z polygonů je Pepovou zahradou...')
         dialog.exec()
         return
     

@@ -26,9 +26,7 @@ class Algorithms:
             if (yi1r > 0) and (yir <= 0) or (yi1r <= 0) and (yir > 0):
                 # We found a suitable segment, now we compute intersection
                 xm = (xi1r*yir - xir*yi1r)/(yi1r-yir)
-                if xm == 0:
-                    self.inside_bounding(q, pol[i], pol[(i+1)%n])
-                    print("Bod je na hrane")
+                if xm == 0 and self.inside_bounding(q, pol[i], pol[(i+1)%n]):
                     return "edge"
                 elif xm > 0:
                     # if m is in the right half-plane; increase number of k 

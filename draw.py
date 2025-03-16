@@ -11,7 +11,7 @@ class Draw(QWidget):
         self.__pol = QPolygonF()
         self.__polygons = []
         self.__add_vertex = False
-        self.highlighted_pol = None
+        self.highlighted_pols = []
 
     def mousePressEvent(self, e:QMouseEvent):
         
@@ -34,8 +34,8 @@ class Draw(QWidget):
             self.__q.setY(y)
             """
             test edge point on edge on on_edge_test data
-            self.__q.setX(243.25)
-            self.__q.setY(486.5)
+            self.__q.setX(324.3333333333333)
+            self.__q.setY(810.8333333333333)
             """
         self.repaint()
  
@@ -50,10 +50,16 @@ class Draw(QWidget):
         
         #Draw polygons
         for pol in self.__polygons:
-            if pol == self.highlighted_pol:
-                qp.setBrush(QColor(0, 255, 0, 128))
+            if isinstance(self.highlighted_pols, list):
+                if pol in self.highlighted_pols:
+                    qp.setBrush(QColor(0, 255, 0, 128))
+                else:
+                    qp.setBrush(Qt.GlobalColor.yellow)
             else:
-                qp.setBrush(Qt.GlobalColor.yellow)
+                if pol == self.highlighted_pols:
+                    qp.setBrush(QColor(0, 255, 0, 128))
+                else:
+                    qp.setBrush(Qt.GlobalColor.yellow)
         
             qp.setPen(Qt.GlobalColor.black)
             qp.drawPolygon(pol)
@@ -85,17 +91,16 @@ class Draw(QWidget):
         return self.__polygons
     
     def highlightPolygon(self, pol):
-        self.highlighted_pol = pol
+        self.highlighted_pols = pol
         self.repaint()
 
     def unHighlightPolygon(self):
-        self.highlighted_pol = False
+        self.highlighted_pols = []
         self.repaint
 
     def clearData(self):
         self.__q = QPointF(0.0, 0.0)
         self.__pol = QPolygonF()
         self.__polygons = []
-        self.__add_vertex = False
-        self.highlighted_pol = None
+        self.highlighted_pols = []
         self.repaint()
