@@ -56,10 +56,11 @@ class Algorithms:
         """
         cum_angle_meas = 0
         tolerance = 0.01
+        n = len(polygon)
 
         for i in range(len(polygon)):
             point1 = polygon[i]
-            point2 = polygon[(i + 1) % len(polygon)]  # to acces the first point as the last one
+            point2 = polygon[(i+1)%n]
 
             vector1 = [point1.x() - q.x(), point1.y() - q.y()]
             vector2 = [point2.x() - q.x(), point2.y() - q.y()]

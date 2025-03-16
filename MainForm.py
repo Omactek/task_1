@@ -104,19 +104,13 @@ class Ui_MainForm(object):
         self.toolBar.addAction(self.actionClear_all)
         self.toolBar.addSeparator()
         self.toolBar.addAction(self.actionExit)
-
-        # file dialog (needed?? - added under the file icon above)
-        self.actionOpen_File_Dialog = QtGui.QAction(parent=MainForm)
-        self.actionOpen_File_Dialog.setText("Open File Dialog")
-        self.actionOpen_File_Dialog.setToolTip("Open a file from disk")
-        self.actionOpen_File_Dialog.setObjectName("actionOpen_File_Dialog")
-        self.toolBar.addAction(self.actionOpen_File_Dialog)
-        self.actionOpen_File_Dialog.triggered.connect(self.openFileDialog)
                 
         #Connect components and slots
         self.actionRay_crossing.triggered.connect(self.analyzeRay)
         self.actionPoint_Polygon.triggered.connect(self.switchClick)
         self.actionWinding_number.triggered.connect(self.analyzeWinding)
+        self.actionExit.triggered.connect(self.closeApp)
+        self.actionClear_all.triggered.connect(self.clearData)
 
         self.retranslateUi(MainForm)
         QtCore.QMetaObject.connectSlotsByName(MainForm)
@@ -203,6 +197,12 @@ class Ui_MainForm(object):
         polygons = load_shapefile(file_path, width, height)
         
         ui.Canvas.paintInputEvent(polygons)
+
+    def closeApp(self):
+        QApplication.instance().quit()
+
+    def clearData(self):
+        ui.Canvas.clearData()
         
     @staticmethod
     def pointInside(pol):

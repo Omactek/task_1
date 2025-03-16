@@ -82,3 +82,11 @@ class Draw(QWidget):
     def highlightPolygon(self, pol):
         self.highlighted_pol = pol
         self.repaint()
+
+    def clearData(self):
+        self.__q = QPointF(0.0, 0.0)
+        self.__pol = QPolygonF()
+        self.__polygons = []
+        self.__add_vertex = False
+        self.highlighted_pol = None
+        self.repaint()
