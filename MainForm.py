@@ -49,7 +49,6 @@ class Ui_MainForm(object):
         icon.addPixmap(QtGui.QPixmap("icons/open_file.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         self.actionOpen.setIcon(icon)
         self.actionOpen.setObjectName("actionOpen")
-        self.actionOpen.triggered.connect(self.openFileDialog)
         self.actionExit = QtGui.QAction(parent=MainForm)
         icon1 = QtGui.QIcon()
         icon1.addPixmap(QtGui.QPixmap("icons/exit.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
@@ -104,16 +103,9 @@ class Ui_MainForm(object):
         self.toolBar.addAction(self.actionClear_all)
         self.toolBar.addSeparator()
         self.toolBar.addAction(self.actionExit)
-
-        # file dialog (needed?? - added under the file icon above)
-        self.actionOpen_File_Dialog = QtGui.QAction(parent=MainForm)
-        self.actionOpen_File_Dialog.setText("Open File Dialog")
-        self.actionOpen_File_Dialog.setToolTip("Open a file from disk")
-        self.actionOpen_File_Dialog.setObjectName("actionOpen_File_Dialog")
-        self.toolBar.addAction(self.actionOpen_File_Dialog)
-        self.actionOpen_File_Dialog.triggered.connect(self.openFileDialog)
                 
         #Connect components and slots
+        self.actionOpen.triggered.connect(self.openFileDialog)
         self.actionRay_crossing.triggered.connect(self.analyzeRay)
         self.actionPoint_Polygon.triggered.connect(self.switchClick)
         self.actionWinding_number.triggered.connect(self.analyzeWinding)

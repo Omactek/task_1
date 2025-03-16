@@ -88,6 +88,7 @@ class Algorithms:
         return False
     
     def minmaxbox(self, pol: QPolygonF):
+        #creates minmax box of a polygon using its min and max coordinates
         mmb = QPolygonF()
 
         #findVertices
@@ -122,7 +123,7 @@ class Algorithms:
     def select_suspicious_polygons(self, q: QPointF, list_of_polygons):
         """
         #  Tests if a point is inside minmaxbox of each polygon from given list of polygons using its min and max coordinates
-        #  Returns list of polygons whose minmax boxes have the point inside
+        #  Returns list of polygons whose minmax boxes have the input point inside
         """
         suspicious_polygons = []
         #searching for potential polygons (testing if the point is inside the minmax box of each polygon)
