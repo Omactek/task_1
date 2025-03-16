@@ -172,7 +172,10 @@ class Ui_MainForm(object):
         pol_inside = False
         for pol in suspicious_polygons: #Only testing polygons whose min-max box contains point q
             result = a.winding_number(q, pol)
-            if result == True:
+            if result == "edge":
+                pol_inside = True
+                self.pointEdge(pol)
+            elif result == "inside":
                 pol_inside = True
                 self.pointInside(pol)
                 
@@ -224,6 +227,18 @@ class Ui_MainForm(object):
         dialog = QtWidgets.QMessageBox()
         dialog.setWindowTitle('Result of analysis')
         dialog.setText('Bohužel, bod se nachází mimo Pepovu zahradu :(')
+        dialog.exec()
+        return
+    
+    @staticmethod
+    def pointEdge(pol):
+        """
+        Opens dialog box with a message that point is on the edge of a polygon."
+        """
+        dialog = QtWidgets.QMessageBox()
+        dialog.setWindowTitle('Result of analysis')
+        ui.Canvas.highlightPolygon(pol)
+        dialog.setText('Bod se nachází na hranici zahrad')
         dialog.exec()
         return
     

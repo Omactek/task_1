@@ -42,10 +42,10 @@ class Algorithms:
     
     def winding_number(self, q: QPointF, polygon: QPolygonF):
         # analyze point and polygon position using winding number algorithm
+        # returns "inside" / "outside" / "edge"
         cum_angle_meas = 0
         tolerance = 0.01
         n = len(polygon)
-
         for i in range(len(polygon)):
             point1 = polygon[i]
             point2 = polygon[(i+1)%n]
@@ -61,22 +61,18 @@ class Algorithms:
             norm1 = sqrt(vector1[0]**2 + vector1[1]**2)
             norm2 = sqrt(vector2[0]**2 + vector2[1]**2)
             angle = acos(round(dot_product / (norm1 * norm2), 10)) # get rid of small inaccuracies caused by floaters (acos requires numbers from range -1 to 1)
-
-            if angle == 0 and self.inside_bounding(q, point1, point2): # if the angle is 0 - point is collinear to the edge
-                print("point is on the edge")
-                return True
             
             cross_product = (point2.x() - point1.x()) * (q.y() - point1.y()) - (point2.y() - point1.y()) * (q.x() - point1.x()) # 2d cross product
-        
+            if cross_product == 0 and self.inside_bounding(q, point1, point2): # point is collinear with the edge and inside bouding box
+                return "edge"
             if cross_product > 0: # point on the left side
                 cum_angle_meas += angle
             else: # point on the right side or collinear (but then angle is 0)
                 cum_angle_meas -= angle
 
         if abs(cum_angle_meas - 2 * pi) < tolerance:
-            return True
-
-        return False
+            return "inside"
+        return "outside"
     
     def minmaxbox(self, pol: QPolygonF):
         mmb = QPolygonF()
